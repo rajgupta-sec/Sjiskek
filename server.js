@@ -18,7 +18,7 @@ app.get('/api/lookup', async (req, res) => {
 
         // Destructures the data to p po
         // leaving everything else inside 'safeData'
-        const { owner, credit, ...safeData } = fullData;
+        const { owner, credit, owner ...safeData } = fullData;
 
         // Sends only the cleaned data to your Blogger site
         res.json(safeData);
