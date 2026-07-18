@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors()); // Allows Blogger to safely communicate with this server
+app.use(cors());
 
 app.get('/api/lookup', async (req, res) => {
     const { number } = req.query;
@@ -13,12 +13,15 @@ app.get('/api/lookup', async (req, res) => {
     }
     
     try {
-        // 1. Fetching securely away from the browser
         const apiResponse = await fetch(`https://api.aerivue.dev/lookup?number=${number}`);
         const fullData = await apiResponse.json();
 
-        // 2. Currently sending all data. We will edit this step later to hide things!
-        res.json(fullData);
+        // Destructures the data to p po
+        // leaving everything else inside 'safeData'
+        const { owner, credit, ...safeData } = fullData;
+
+        // Sends only the cleaned data to your Blogger site
+        res.json(safeData);
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch data from original API" });
     }
